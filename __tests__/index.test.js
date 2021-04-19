@@ -1,5 +1,9 @@
-import { testFunction } from "../src/index";
+import getFilename from '../src/index';
 
-it("Test", () => {
-  expect(testFunction()).toEqual(true);
+it('Url to filename', () => {
+  expect(getFilename('https://ru.hexlet.io/courses')).toEqual(
+    'ru-hexlet-io-courses.html',
+  );
+  expect(getFilename()).toEqual('.html');
+  expect(getFilename('', 'css')).toEqual('.css');
 });

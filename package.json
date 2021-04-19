@@ -4,7 +4,8 @@
   "description": "[![Actions Status](https://github.com/razamanaza/frontend-testing-react-project-lvl1/workflows/hexlet-check/badge.svg)](https://github.com/razamanaza/frontend-testing-react-project-lvl1/actions)",
   "main": "src/index.js",
   "scripts": {
-    "test": "jest"
+    "test": "jest",
+    "test-dev": "jest --watch"
   },
   "repository": {
     "type": "git",
