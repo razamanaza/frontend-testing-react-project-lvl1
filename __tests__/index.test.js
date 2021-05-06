@@ -1,9 +1,19 @@
-import getFilename from '../src/index';
+import * as fs from 'fs';
+import pageLoader from '../src/index';
 
-it('Url to filename', () => {
-  expect(getFilename('https://ru.hexlet.io/courses')).toEqual(
-    'ru-hexlet-io-courses.html',
-  );
-  expect(getFilename()).toEqual('.html');
-  expect(getFilename('', 'css')).toEqual('.css');
+const fileExists = (file) => {
+  try {
+    fs.accessSync(file, fs.constants.R_OK || fs.constants.W_OK);
+    return true;
+  } catch (err) {
+    return false;
+  }
+};
+
+describe('page download', () => {
+  it('file check', async () => {
+    const downloadedFile = await pageLoader('https://ru.hexlet.io/courses');
+    expect(downloadedFile).not.toBeUndefined();
+    expect(fileExists(downloadedFile)).toBe(true);
+  });
 });
