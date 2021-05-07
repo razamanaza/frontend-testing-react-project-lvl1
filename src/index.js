@@ -4,11 +4,12 @@ import * as os from 'os';
 import * as path from 'path';
 import getFilename from './helpers';
 
-const pageLoader = async (url) => {
-  const tempdir = os.tmpdir();
+axios.defaults.adapter = require('axios/lib/adapters/http');
+
+const pageLoader = async (url, dstdir = os.tmpdir()) => {
   const html = await axios.get(url);
-  const filepath = path.join(tempdir, getFilename(url));
-  fs.writeFileSync(filepath, JSON.stringify(html), 'utf-8');
+  const filepath = path.join(dstdir, getFilename(url));
+  fs.writeFileSync(filepath, html.data, 'utf-8');
   return filepath;
 };
 
