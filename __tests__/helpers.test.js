@@ -8,10 +8,8 @@ describe('Helpers', () => {
     expect(getFilename()).toEqual('.html');
     expect(getFilename('', 'css')).toEqual('.css');
   });
-  it.only('Get all params', () => {
+  it('Get all params', () => {
     const params = [
-      '/usr/bin/node',
-      '/usr/bin/page-loader',
       '--output',
       '/var/tmp',
       'https://ru.hexlet.io/courses'
@@ -19,6 +17,24 @@ describe('Helpers', () => {
     expect(getParams(params)).toMatchObject({
       output: "/var/tmp",
       url: 'https://ru.hexlet.io/courses'
-    })
-  })
+    });
+  });
+  it('No url provided', () => {
+    const params = [
+      '--output',
+      '/var/tmp'
+    ];
+    expect(getParams(params)).toEqual({
+      error: 'No url were provided'
+    });
+  });
+  it('No output provided', () => {
+    const params = [
+      'https://ru.hexlet.io/courses'
+    ];
+    expect(getParams(params)).toMatchObject({
+      output: process.cwd(),
+      url: 'https://ru.hexlet.io/courses'
+    });
+  });
 });

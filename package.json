@@ -38,6 +38,8 @@
     "nock": "^13.0.11"
   },
   "dependencies": {
-    "axios": "^0.21.1"
+    "axios": "^0.21.1",
+    "valid-url": "^1.0.9",
+    "yargs-parser": "^18.1.3"
   }
 }
