@@ -1,6 +1,5 @@
 import axios from 'axios';
 import * as fs from 'fs';
-import * as os from 'os';
 import * as path from 'path';
 import http from 'axios/lib/adapters/http.js';
 import { getFilename,  getParams } from './helpers.js';
@@ -15,7 +14,7 @@ const pageLoader = async (params) => {
   }
   const html = await axios.get(url);
   const filepath = path.join(output, getFilename(url));
-  fs.writeFileSync(filepath, html.data, 'utf-8');
+  await fs.promises.writeFile(filepath, html.data, 'utf-8');
   return filepath;
 };
 

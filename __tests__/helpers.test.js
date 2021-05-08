@@ -37,4 +37,12 @@ describe('Helpers', () => {
       url: 'https://ru.hexlet.io/courses'
     });
   });
+  it('Invalid url', () => {
+    const params = [
+      'mut://ru.hexlet.io/courses'
+    ];
+    expect(getParams(params)).toEqual({
+      error: 'Url is invalid'
+    });
+  });
 });
