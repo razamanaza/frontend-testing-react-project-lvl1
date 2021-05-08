@@ -39,5 +39,6 @@ describe('page download', () => {
     const downloadedFile = await pageLoader('https://ru.hexlet.io/courses', tempdir);
     expect(downloadedFile).not.toBeUndefined();
     expect(fileExists(downloadedFile)).toBe(true);
+    expect(readFile(downloadedFile)).toEqual(readFile(getFixturePath('index.html')));
   });
 });
