@@ -8,7 +8,7 @@ describe('Helpers', () => {
     expect(getFilename()).toEqual('.html');
     expect(getFilename('', 'css')).toEqual('.css');
   });
-  it('Get all params', () => {
+  it.only('Get all params', () => {
     const params = [
       '/usr/bin/node',
       '/usr/bin/page-loader',
