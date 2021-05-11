@@ -39,6 +39,8 @@
   },
   "dependencies": {
     "axios": "^0.21.1",
+    "cheerio": "*",
+    "slugify": "^1.5.2",
     "valid-url": "^1.0.9",
     "yargs-parser": "^18.1.3"
   }

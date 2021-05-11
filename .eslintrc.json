@@ -10,7 +10,6 @@
     "sourceType": "module"
   },
   "rules": {
-    "implicit-arrow-linebreak": "off",
-    "import/extensions": "always"
+    "implicit-arrow-linebreak": "off"
   }
 }
