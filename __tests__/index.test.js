@@ -17,14 +17,6 @@ const fileExists = (file) => {
 };
 
 describe('downloadFile', () => {
-  it.only('load file', async () => {
-    const filepath = path.join(process.cwd(), 'profile-photo.jpeg');
-    await downloadFile('https://agordeev.com/img/profile-photo.jpeg', filepath);
-    expect(fileExists(filepath)).toBe(true);
-  });
-});
-
-describe('pageLoader', () => {
   let tempdir;
   beforeAll(() => {
     nock.disableNetConnect();
@@ -38,24 +30,20 @@ describe('pageLoader', () => {
   afterEach(() => {
     fs.rmSync(tempdir, { recursive: true });
   });
-  it('file check', async () => {
-    nock('https://ru.hexlet.io')
-      .get('/courses')
-      .replyWithFile(200, getFixturePath('index.html'), {
-        'Content-Type': 'text/html',
+  it('load file', async () => {
+    const filepath = path.join(tempdir, 'image.jpg');
+    nock('https://ru.hexlet.io/')
+      .get('/image.jpg')
+      .replyWithFile(200, getFixturePath('image.jpg'), {
+        'Content-Type': 'image/jpeg',
       });
-    const params = [
-      'https://ru.hexlet.io/courses',
-    ];
-    const downloadedFile = await pageLoader(params);
-    expect(downloadedFile).not.toBeUndefined();
-    expect(fileExists(downloadedFile)).toBe(true);
-    expect(readFile(downloadedFile)).toEqual(readFile(getFixturePath('index.html')));
+    await downloadFile('https://ru.hexlet.io/image.jpg', filepath);
+    expect(fileExists(filepath)).toBe(true);
   });
 });
 
 describe('Real pageLoader', () => {
-  it.only('Load', async () => {
+  it('Load', async () => {
     const downloadDir = `${process.cwd()}/../frontend-testing-react-project-lvl1-downloads`;
     const params = [
       '--output',

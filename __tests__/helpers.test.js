@@ -78,7 +78,7 @@ describe('getImages', () => {
 });
 
 describe('replaceImages', () => {
-  it.only('replace images', async () => {
+  it('replace images', async () => {
     const html = readFile(getFixturePath('getImages.html'));
     const images = getImages(html, 'https://ru.hexlet.io/courses');
     const replacedFix = readFile(getFixturePath('replacedImages.html'));    
