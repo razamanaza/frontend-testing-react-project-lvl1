@@ -28,24 +28,29 @@ export const getParams = (params) => {
   return { output, url };
 };
 
-export const getImages = (html, baseUrl) => {
+export const getImages = (html, href) => {
   const $ = cheerio.load(html);
+  const { origin } = new URL(href);
   const images = {};
-  $('img').each((i, tag) => {
-    const original = tag.attribs.src;
-    const myUrl = new URL(original, baseUrl);
-    const url = myUrl.href;
-    const filepath = `${path.join(`${getFilename(baseUrl)}_files`, getFilename(myUrl.href, true))}`;
-    images[original] = { url, filepath };
+  $('img').each(function () {
+    const original = $(this).attr('src');
+    const newUrl = new URL(original, origin);
+    if (newUrl.origin === origin) {
+      const url = newUrl.href;
+      const filename = `${getFilename(newUrl.href, true)}`;
+      images[original] = { url, filename };
+    }
   });
   return images;
 };
 
-export const replaceImages = async (html, images) => {
+export const replaceImages = async (html, images, fileDir) => {
   const $ = cheerio.load(html);
   $('img').each(function () {
     const src = $(this).attr('src');
-    $(this).attr('src', images[src].filepath);
+    if (images[src]) {
+      $(this).attr('src', path.join(fileDir, images[src].filename));
+    }
   });
   return $.html();
 };

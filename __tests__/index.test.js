@@ -43,8 +43,8 @@ describe('downloadFile', () => {
 });
 
 describe('Real pageLoader', () => {
-  it('Load', async () => {
-    const downloadDir = `${process.cwd()}/../frontend-testing-react-project-lvl1-downloads`;
+  it.only('Load', async () => {
+    const downloadDir = '../frontend-testing-react-project-lvl1-downloads';
     const params = [
       '--output',
       downloadDir,

@@ -32,8 +32,9 @@ const pageLoader = async (params) => {
   const fileDir = `${path.join(output, getFilename(url))}_files`;
   const images = getImages(html, origin);
   await fs.promises.mkdir(fileDir, { recursive: true });
-  await Promise.all(Object.values(images).map((image) => downloadFile(image.url, image.filepath)));
-  const htmlWithLocalImages = await replaceImages(html, images);
+  await Promise.all(Object.values(images).map((image) => 
+    downloadFile(image.url, path.join(fileDir, image.filename))));
+  const htmlWithLocalImages = await replaceImages(html, images, fileDir);
   await fs.promises.writeFile(filePath, htmlWithLocalImages, 'utf-8');
   return filePath;
 };

@@ -67,11 +67,11 @@ describe('getImages', () => {
     expect(getImages(html, 'https://ru.hexlet.io/courses')).toEqual({
       '/assets/professions/nodejs.png': {
         url: 'https://ru.hexlet.io/assets/professions/nodejs.png',
-        filepath: 'ru-hexlet-io-courses_files/ru-hexlet-io-assets-professions-nodejs.png',
+        filename: 'ru-hexlet-io-assets-professions-nodejs.png',
       },
-      '/assets/image.jpg': {
+      'assets/image.jpg': {
         url: 'https://ru.hexlet.io/assets/image.jpg',
-        filepath: 'ru-hexlet-io-courses_files/ru-hexlet-io-assets-image.jpg',
+        filename: 'ru-hexlet-io-assets-image.jpg',
       },
     });
   });
@@ -81,8 +81,9 @@ describe('replaceImages', () => {
   it('replace images', async () => {
     const html = readFile(getFixturePath('getImages.html'));
     const images = getImages(html, 'https://ru.hexlet.io/courses');
-    const replacedFix = readFile(getFixturePath('replacedImages.html'));    
-    const replaced = await replaceImages(html, images);
+    const replacedFix = readFile(getFixturePath('replacedImages.html'));
+    const fileDir = 'ru-hexlet-io-courses_files';
+    const replaced = await replaceImages(html, images, fileDir);
     expect(replaced).toEqual(replacedFix);
   });
 });
