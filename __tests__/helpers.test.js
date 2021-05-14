@@ -1,7 +1,7 @@
 import * as path from 'path';
 import * as fs from 'fs';
 import {
-  getFilename, getParams, getImages, replaceImages,
+  getFilename, getParams, getResources, replaceResources,
 } from '../src/helpers';
 
 const getFixturePath = (filename) => path.join(__dirname, '..', '__fixtures__', filename);
@@ -10,9 +10,8 @@ const readFile = (filename) => fs.readFileSync(filename, 'utf-8');
 describe('getFilename', () => {
   it('Url to filename', () => {
     expect(getFilename('http://ru.hexlet.io/courses')).toEqual(
-      'ru-hexlet-io-courses',
+      'ru-hexlet-io-courses.html',
     );
-    expect(getFilename()).toEqual('');
   });
   it('Filename url', () => {
     expect(getFilename('http://ru.hexlet.io/assets/image.png', true)).toEqual(
@@ -61,29 +60,21 @@ describe('getParams', () => {
   });
 });
 
-describe('getImages', () => {
+describe('getResources', () => {
   it('extract images', () => {
-    const html = readFile(getFixturePath('getImages.html'));
-    expect(getImages(html, 'https://ru.hexlet.io/courses')).toEqual({
-      '/assets/professions/nodejs.png': {
-        url: 'https://ru.hexlet.io/assets/professions/nodejs.png',
-        filename: 'ru-hexlet-io-assets-professions-nodejs.png',
-      },
-      'assets/image.jpg': {
-        url: 'https://ru.hexlet.io/assets/image.jpg',
-        filename: 'ru-hexlet-io-assets-image.jpg',
-      },
-    });
+    const html = readFile(getFixturePath('getResources.html'));
+    const extractedResources = JSON.parse(readFile(getFixturePath('resources.json')));
+    expect(getResources(html, 'https://ru.hexlet.io/courses')).toEqual(extractedResources);
   });
 });
 
-describe('replaceImages', () => {
-  it('replace images', async () => {
-    const html = readFile(getFixturePath('getImages.html'));
-    const images = getImages(html, 'https://ru.hexlet.io/courses');
-    const replacedFix = readFile(getFixturePath('replacedImages.html'));
+describe('replaceResources', () => {
+  it('replace resources', async () => {
+    const html = readFile(getFixturePath('getResources.html'));
+    const images = getResources(html, 'https://ru.hexlet.io/courses');
+    const replacedFix = readFile(getFixturePath('replacedResources.html'));
     const fileDir = 'ru-hexlet-io-courses_files';
-    const replaced = await replaceImages(html, images, fileDir);
+    const replaced = await replaceResources(html, images, fileDir);
     expect(replaced).toEqual(replacedFix);
   });
 });

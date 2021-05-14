@@ -40,10 +40,16 @@ describe('downloadFile', () => {
     await downloadFile('https://ru.hexlet.io/image.jpg', filepath);
     expect(fileExists(filepath)).toBe(true);
   });
+  it.only('Network errors', async () => {
+    nock('https://ru.hexlet.io/')
+      .get('/image.jpg')
+      .reply(404, 'File not found');
+    expect(downloadFile('https://ru.hexlet.io/image.jpg', '/')).rejects.toThrow();
+  });
 });
 
 describe('Real pageLoader', () => {
-  it.only('Load', async () => {
+  it('Load', async () => {
     const downloadDir = '../frontend-testing-react-project-lvl1-downloads';
     const params = [
       '--output',
@@ -51,6 +57,5 @@ describe('Real pageLoader', () => {
       'https://agordeev.com',
     ];
     const downloadedFile = await pageLoader(params);
-    expect(downloadedFile).not.toBeUndefined();
   });
 });

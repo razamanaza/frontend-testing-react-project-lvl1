@@ -7,8 +7,9 @@
     "page-loader": "bin/index.js"
   },
   "scripts": {
-    "test": "jest",
+    "test": "DEBUG='nock.* page-loader' jest",
     "test-dev": "jest --watch",
+    "debug": "DEBUG='axios page-loader' bin/index.js",
     "run": "bin/index.js",
     "build": "babel src -d dist"
   },
@@ -39,8 +40,11 @@
   },
   "dependencies": {
     "axios": "^0.21.1",
+    "axios-debug-log": "^0.8.2",
     "cheerio": "*",
+    "debug": "^4.3.1",
     "slugify": "^1.5.2",
+    "supports-color": "^7.2.0",
     "valid-url": "^1.0.9",
     "yargs-parser": "^18.1.3"
   }

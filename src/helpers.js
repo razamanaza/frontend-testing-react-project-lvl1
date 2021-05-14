@@ -3,15 +3,19 @@ import validUrl from 'valid-url';
 import * as cheerio from 'cheerio';
 import * as path from 'path';
 
-const slugify = (name) => `${name.replace(/^https?:\/\//, '').replace(/[^\w\d]/g, '-')}`;
+const resTypes = [
+  { tag: 'img', link: 'src' },
+  { tag: 'link', link: 'href' },
+  { tag: 'script', link: 'src' },
+];
+export const slugify = (name) => `${name.replace(/^https?:\/\//, '').replace(/[^\w\d]/g, '-')}`;
 
-export const getFilename = (url = '', keepExt = false) => {
-  if (keepExt) {
-    const ext = url.split('.').slice(-1).join();
-    const base = url.split('.').slice(0, -1).join('.');
-    return `${slugify(base)}.${ext}`;
-  }
-  return slugify(url);
+export const getFilename = (url) => {
+  const { pathname } = new URL(url);
+  const ext = pathname.match(/\.[0-9a-z]+$/i) ? pathname.match(/\.[0-9a-z]+$/i)[0] : '.html';
+  const extRegex = new RegExp(`${ext}$`, 'g');
+  const base = url.replace(extRegex, '');
+  return `${slugify(base)}${ext}`;
 };
 
 export const getParams = (params) => {
@@ -28,29 +32,33 @@ export const getParams = (params) => {
   return { output, url };
 };
 
-export const getImages = (html, href) => {
+export const getResources = (html, href) => {
   const $ = cheerio.load(html);
   const { origin } = new URL(href);
-  const images = {};
-  $('img').each(function () {
-    const original = $(this).attr('src');
-    const newUrl = new URL(original, origin);
-    if (newUrl.origin === origin) {
-      const url = newUrl.href;
-      const filename = `${getFilename(newUrl.href, true)}`;
-      images[original] = { url, filename };
-    }
+  const resources = {};
+  resTypes.forEach((res) => {
+    $(res.tag).each(function () {
+      const original = $(this).attr(res.link);
+      const newUrl = new URL(original, origin);
+      if (newUrl.origin === origin) {
+        const url = newUrl.href;
+        const filename = `${getFilename(newUrl.href)}`;
+        resources[original] = { url, filename };
+      }
+    });
   });
-  return images;
+  return resources;
 };
 
-export const replaceImages = async (html, images, fileDir) => {
+export const replaceResources = async (html, images, fileDir) => {
   const $ = cheerio.load(html);
-  $('img').each(function () {
-    const src = $(this).attr('src');
-    if (images[src]) {
-      $(this).attr('src', path.join(fileDir, images[src].filename));
-    }
+  resTypes.forEach((res) => {
+    $(res.tag).each(function () {
+      const src = $(this).attr(res.link);
+      if (images[src]) {
+        $(this).attr(res.link, path.join(fileDir, images[src].filename));
+      }
+    });
   });
   return $.html();
 };
