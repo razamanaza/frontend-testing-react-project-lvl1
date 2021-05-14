@@ -7,7 +7,7 @@
     "page-loader": "bin/index.js"
   },
   "scripts": {
-    "test": "jest",
+    "test": "jest --colors --runInBand --bail",
     "test-debug": "DEBUG='nock.* page-loader' jest",
     "test-dev": "jest --watch",
     "debug": "DEBUG='axios page-loader' bin/index.js",
