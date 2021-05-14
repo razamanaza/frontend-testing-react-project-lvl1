@@ -7,7 +7,8 @@
     "page-loader": "bin/index.js"
   },
   "scripts": {
-    "test": "DEBUG='nock.* page-loader' jest",
+    "test": "jest",
+    "test-debug": "DEBUG='nock.* page-loader' jest",
     "test-dev": "jest --watch",
     "debug": "DEBUG='axios page-loader' bin/index.js",
     "run": "bin/index.js",
@@ -35,6 +36,7 @@
     "eslint-config-airbnb-base": "^14.2.1",
     "eslint-config-prettier": "^8.2.0",
     "eslint-plugin-import": "^2.22.1",
+    "eslint-plugin-jest": "^24.3.6",
     "jest": "^26.6.3",
     "nock": "^13.0.11"
   },
