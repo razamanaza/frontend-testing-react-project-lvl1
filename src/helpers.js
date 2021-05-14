@@ -28,7 +28,7 @@ export const getParams = (params) => {
   if (!validUrl.isWebUri(url)) {
     return { error: 'Url is invalid' };
   }
-  const output = options.output ?? defaultOutput;
+  const output = options.output ? options.output : defaultOutput;
   return { output, url };
 };
 

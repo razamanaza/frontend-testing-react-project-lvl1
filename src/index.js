@@ -36,6 +36,8 @@ export const downloadFile = async (url, filepath) => {
 const pageLoader = async (params) => {
   dbg(`Started with params: ${params}`);
   const { url, output, error } = getParams(params);
+  dbg(`output dir: ${output}`);
+  dbg(`cwd: ${process.cwd()}`);
   if (error) {
     exitApp(error);
   }
