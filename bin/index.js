@@ -3,5 +3,5 @@
 const pageLoader = require('../dist/index.js').default;
 
 (async () => {
-  await pageLoader(process.argv.slice(2));
+  await pageLoader(process.argv);
 })();
