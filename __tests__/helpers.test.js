@@ -2,7 +2,7 @@ import * as path from 'path';
 import * as fs from 'fs';
 import { fileURLToPath } from 'url';
 import {
-  getFilename, getParams, getResources, replaceResources,
+  getFilename, checkArguments, getResources, replaceResources,
 } from '../src/helpers';
 
 const __filename = fileURLToPath(import.meta.url);
@@ -23,43 +23,10 @@ describe('getFilename', () => {
   });
 });
 
-describe('getParams', () => {
-  it('Get all params', () => {
-    const params = [
-      '--output',
-      '/var/tmp',
-      'https://ru.hexlet.io/courses',
-    ];
-    expect(getParams(params)).toMatchObject({
-      output: '/var/tmp',
-      url: 'https://ru.hexlet.io/courses',
-    });
-  });
-  it('No url provided', () => {
-    const params = [
-      '--output',
-      '/var/tmp',
-    ];
-    expect(getParams(params)).toEqual({
-      error: 'No url were provided',
-    });
-  });
-  it('No output provided', () => {
-    const params = [
-      'https://ru.hexlet.io/courses',
-    ];
-    expect(getParams(params)).toMatchObject({
-      output: process.cwd(),
-      url: 'https://ru.hexlet.io/courses',
-    });
-  });
-  it('Invalid url', () => {
-    const params = [
-      'mut://ru.hexlet.io/courses',
-    ];
-    expect(getParams(params)).toEqual({
-      error: 'Url is invalid',
-    });
+describe('checkArguments', () => {
+  it('Check correct args', () => {  
+    const url = 'http://ya.ru';
+    expect(checkArguments([url])).toEqual(url);
   });
 });
 

@@ -18,18 +18,15 @@ export const getFilename = (url) => {
   return `${slugify(base)}${ext}`;
 };
 
-export const getParams = (params) => {
-  const defaultOutput = process.cwd();
-  const options = parser(params, { default: { output: defaultOutput } });
-  if (options._.length <= 0) {
-    return { error: 'No url were provided' };
+export const checkArguments = (args) => {
+  if (args.length !== 1) {
+    throw new Error('I can only download one page at a time');
   }
-  const url = options._[0];
+  const url = args.pop();
   if (!validUrl.isWebUri(url)) {
-    return { error: 'Url is invalid' };
+    throw new Error('Url is invalid');
   }
-  const output = options.output ? options.output : defaultOutput;
-  return { output, url };
+  return url;
 };
 
 export const getResources = (html, href) => {
