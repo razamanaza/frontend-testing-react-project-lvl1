@@ -1,4 +1,3 @@
-/* eslint-disable import/extensions */
 import axios from 'axios';
 import * as fs from 'fs';
 import * as path from 'path';
@@ -33,11 +32,8 @@ export const downloadFile = async (url, filepath) => {
   }
 };
 
-const pageLoader = async (params) => {
-  dbg(`Started with params: ${params}`);
+export default async (params) => {
   const { url, output, error } = getParams(params);
-  dbg(`output dir: ${output}`);
-  dbg(`cwd: ${process.cwd()}`);
   if (error) {
     exitApp(error);
   }
@@ -61,7 +57,5 @@ const pageLoader = async (params) => {
   } catch (e) {
     exitApp(e);
   }
-  console.log(`Files downloaded into ${filePath}`);
+  return `Files downloaded into ${filePath}`;
 };
-
-export default pageLoader;

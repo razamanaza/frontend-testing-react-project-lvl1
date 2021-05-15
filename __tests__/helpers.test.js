@@ -1,9 +1,12 @@
 import * as path from 'path';
 import * as fs from 'fs';
+import { fileURLToPath } from 'url';
 import {
   getFilename, getParams, getResources, replaceResources,
 } from '../src/helpers';
 
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 const getFixturePath = (filename) => path.join(__dirname, '..', '__fixtures__', filename);
 const readFile = (filename) => fs.readFileSync(filename, 'utf-8');
 

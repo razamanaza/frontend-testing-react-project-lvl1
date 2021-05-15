@@ -1,6 +1,6 @@
 import parser from 'yargs-parser';
 import validUrl from 'valid-url';
-import * as cheerio from 'cheerio';
+import cheerio from 'cheerio';
 import * as path from 'path';
 
 const resTypes = [
@@ -39,6 +39,9 @@ export const getResources = (html, href) => {
   resTypes.forEach((res) => {
     $(res.tag).each(function () {
       const original = $(this).attr(res.link);
+      if(!original) {
+        return;
+      }
       const newUrl = new URL(original, origin);
       if (newUrl.origin === origin) {
         const url = newUrl.href;
