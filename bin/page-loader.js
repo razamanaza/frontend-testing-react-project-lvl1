@@ -11,7 +11,7 @@ const dbg = debug('page-loader');
     .option('-o, --output <type>', 'output folder', `${process.cwd()}`)
     .action(async (url, options) => {
       try {
-        await pageLoader(url, options.output);
+        console.log(await pageLoader(url, options.output));
       } catch (error) {
         console.error(error.message);
         dbg(error);

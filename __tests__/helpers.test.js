@@ -2,7 +2,7 @@ import * as path from 'path';
 import * as fs from 'fs';
 import { fileURLToPath } from 'url';
 import {
-  getFilename, checkArguments, getResources, replaceResources,
+  getFilename, getResources, replaceResources,
 } from '../src/helpers';
 
 const __filename = fileURLToPath(import.meta.url);

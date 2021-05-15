@@ -40,7 +40,7 @@ export default async (url, output) => {
   await fs.promises.mkdir(fileDir, { recursive: true });
   await Promise.all(Object.values(resources).map((res) =>
     downloadFile(res.url, path.join(fileDir, res.filename))));
-  const htmlReplaced = await replaceResources(html, resources, fileDir);
+  const htmlReplaced = await replaceResources(html, resources, `${slugify(url)}_files`);
   await fs.promises.writeFile(filePath, htmlReplaced, 'utf-8');
   return `Files downloaded into ${output}`;
 };
