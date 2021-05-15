@@ -1,4 +1,3 @@
-import parser from 'yargs-parser';
 import validUrl from 'valid-url';
 import cheerio from 'cheerio';
 import * as path from 'path';

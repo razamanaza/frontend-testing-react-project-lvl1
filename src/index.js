@@ -23,7 +23,6 @@ export const downloadFile = async (url, filepath) => {
     }
     await response.data.pipe(fs.createWriteStream(filepath));
   } catch (e) {
-    dbg(e);
     throw new Error(`Failed to download ${url}. ${e.message}`);
   }
 };
@@ -50,6 +49,7 @@ export default async (params) => {
     result = `Files downloaded into ${output}`;
   } catch (error) {
     console.error(error.message);
+    dbg(error);
     process.exit(1);
   }
   return result;
