@@ -27,8 +27,9 @@ export const downloadFile = async (url, filepath) => {
   }
 };
 
-export default async (params) => {
+export default async (params, output) => {
   dbg(params);
+  dbg(output);
   let result;
   try {
     program.option('-o, --output <type>', 'output folder', `${process.cwd()}`);
