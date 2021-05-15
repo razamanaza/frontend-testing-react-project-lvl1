@@ -1,4 +1,3 @@
-import validUrl from 'valid-url';
 import cheerio from 'cheerio';
 import * as path from 'path';
 
@@ -17,17 +16,6 @@ export const getFilename = (url) => {
   return `${slugify(base)}${ext}`;
 };
 
-export const checkArguments = (args) => {
-  if (args.length !== 1) {
-    throw new Error('I can only download one page at a time');
-  }
-  const url = args.pop();
-  if (!validUrl.isWebUri(url)) {
-    throw new Error('Url is invalid');
-  }
-  return url;
-};
-
 export const getResources = (html, href) => {
   const $ = cheerio.load(html);
   const { origin } = new URL(href);
@@ -35,7 +23,7 @@ export const getResources = (html, href) => {
   resTypes.forEach((res) => {
     $(res.tag).each(function () {
       const original = $(this).attr(res.link);
-      if(!original) {
+      if (!original) {
         return;
       }
       const newUrl = new URL(original, origin);

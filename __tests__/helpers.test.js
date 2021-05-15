@@ -23,22 +23,6 @@ describe('getFilename', () => {
   });
 });
 
-describe('checkArguments', () => {
-  it('Check correct args', () => {
-    const url = 'http://ya.ru';
-    expect(checkArguments([url])).toEqual(url);
-  });
-  it('Check empty args', () => {
-    expect(() => checkArguments([])).toThrow();
-  });
-  it('More than one url', () => {
-    expect(() => checkArguments(['http://ya.ru', 'https://o.com'])).toThrow();
-  });
-  it('Wrong url', () => {
-    expect(() => checkArguments(['fakeprotocol://ya.ru'])).toThrow();
-  });
-});
-
 describe('getResources', () => {
   it('extract images', () => {
     const html = readFile(getFixturePath('getResources.html'));

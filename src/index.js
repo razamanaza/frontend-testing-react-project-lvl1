@@ -2,10 +2,10 @@ import axios from 'axios';
 import * as fs from 'fs';
 import * as path from 'path';
 import debug from 'debug';
-import { program } from 'commander';
+import validUrl from 'valid-url';
 import http from 'axios/lib/adapters/http.js';
 import {
-  getFilename, checkArguments, getResources, replaceResources, slugify,
+  getFilename, getResources, replaceResources, slugify,
 } from './helpers.js';
 
 const dbg = debug('page-loader');
@@ -27,32 +27,20 @@ export const downloadFile = async (url, filepath) => {
   }
 };
 
-export default async (params, output) => {
-  dbg(params);
-  dbg(output);
-  let result;
-  try {
-    program.option('-o, --output <type>', 'output folder', `${process.cwd()}`);
-    program.arguments('<url>');
-    program.parse(params);
-    const { output } = program.opts();
-    const url = checkArguments(program.args);
-    const { origin } = new URL(url);
-    const resp = await axios.get(url);
-    const html = resp.data;
-    const filePath = `${path.join(output, getFilename(url))}`;
-    const fileDir = `${path.join(output, slugify(url))}_files`;
-    const resources = getResources(html, origin);
-    await fs.promises.mkdir(fileDir, { recursive: true });
-    await Promise.all(Object.values(resources).map((res) =>
-      downloadFile(res.url, path.join(fileDir, res.filename))));
-    const htmlReplaced = await replaceResources(html, resources, fileDir);
-    await fs.promises.writeFile(filePath, htmlReplaced, 'utf-8');
-    result = `Files downloaded into ${output}`;
-  } catch (error) {
-    console.error(error.message);
-    dbg(error);
-    process.exit(1);
+export default async (url, output) => {
+  if (!validUrl.isWebUri(url)) {
+    throw new Error('Invalid url format');
   }
-  return result;
+  const { origin } = new URL(url);
+  const resp = await axios.get(url);
+  const html = resp.data;
+  const filePath = `${path.join(output, getFilename(url))}`;
+  const fileDir = `${path.join(output, slugify(url))}_files`;
+  const resources = getResources(html, origin);
+  await fs.promises.mkdir(fileDir, { recursive: true });
+  await Promise.all(Object.values(resources).map((res) =>
+    downloadFile(res.url, path.join(fileDir, res.filename))));
+  const htmlReplaced = await replaceResources(html, resources, fileDir);
+  await fs.promises.writeFile(filePath, htmlReplaced, 'utf-8');
+  return `Files downloaded into ${output}`;
 };
