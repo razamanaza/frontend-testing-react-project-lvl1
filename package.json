@@ -9,7 +9,7 @@
     "node": ">=14"
   },
   "scripts": {
-    "test": "npx jest --colors --runInBand --bail"
+    "test": "NODE_OPTIONS=--experimental-vm-modules npx jest --colors --runInBand --bail"
   },
   "repository": {
     "type": "git",
