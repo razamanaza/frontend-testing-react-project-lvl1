@@ -1,21 +1,19 @@
 /* eslint-disable jest/valid-expect */
-import * as fs from 'fs';
+import { readFileSync, constants, accessSync, mkdtempSync, rmSync } from 'fs';
 import * as path from 'path';
 import * as os from 'os';
 import nock from 'nock';
 import { fileURLToPath } from 'url';
 import { downloadFile, default as pageLoader } from '../src/index';
-import { expect, it } from '@jest/globals';
-import { formatWithOptions } from 'util';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const getFixturePath = (filename) => path.join(__dirname, '..', '__fixtures__', filename);
-const readFile = (filename) => fs.readFileSync(filename, 'utf-8');
+const readFile = (filename) => readFileSync(filename, 'utf-8');
 
 const fileExists = (file) => {
   try {
-    fs.accessSync(file, fs.constants.R_OK || fs.constants.W_OK);
+    accessSync(file, constants.R_OK || constants.W_OK);
     return true;
   } catch (err) {
     return false;
@@ -31,10 +29,10 @@ describe('downloadFile', () => {
     nock.enableNetConnect();
   });
   beforeEach(() => {
-    tempdir = fs.mkdtempSync(path.join(os.tmpdir(), 'page-loader-'));
+    tempdir = mkdtempSync(path.join(os.tmpdir(), 'page-loader-'));
   });
   afterEach(() => {
-    fs.rmSync(tempdir, { recursive: true });
+    rmSync(tempdir, { recursive: true });
   });
   it('load file', async () => {
     const filepath = path.join(tempdir, 'image.jpg');
@@ -63,10 +61,10 @@ describe('pageLoader', () => {
     nock.enableNetConnect();
   });
   beforeEach(() => {
-    tempdir = fs.mkdtempSync(path.join(os.tmpdir(), 'page-loader-'));
+    tempdir = mkdtempSync(path.join(os.tmpdir(), 'page-loader-'));
   });
   afterEach(() => {
-    fs.rmSync(tempdir, { recursive: true });
+    rmSync(tempdir, { recursive: true });
   });
   it('input parameters check', () => {
     expect(() => pageLoader()).rejects.toThrow('Invalid url format');
