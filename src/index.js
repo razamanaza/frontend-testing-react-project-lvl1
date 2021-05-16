@@ -34,6 +34,8 @@ export default async (url, output) => {
   const { origin } = new URL(url);
   const resp = await axios.get(url);
   const html = resp.data;
+  dbg(output);
+  dbg(url);
   const filePath = `${path.join(output, getFilename(url))}`;
   const fileDir = `${path.join(output, slugify(url))}_files`;
   const resources = getResources(html, origin);
