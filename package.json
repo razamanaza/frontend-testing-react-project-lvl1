@@ -9,7 +9,7 @@
     "node": ">=14"
   },
   "scripts": {
-    "test": "npx jest --colors --runInBand --bail --watch"
+    "test": "npx jest --colors --runInBand --bail --coverage"
   },
   "repository": {
     "type": "git",

@@ -4,6 +4,8 @@ import * as os from 'os';
 import nock from 'nock';
 import { fileURLToPath } from 'url';
 import { downloadFile, default as pageLoader } from '../src/index';
+import { expect } from '@jest/globals';
+import { formatWithOptions } from 'util';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -66,13 +68,27 @@ describe('pageLoader', () => {
   afterEach(() => {
     fs.rmSync(tempdir, { recursive: true });
   });
-  it('download files', async () => {
-    nock('https://ru.hexlet.io')
-      .get('/courses')
-      .replyWithFile(200, getFixturePath('getResourses.html'), {
-        'Content-Type': 'image/jpeg',
-      });
-    await pageLoader('https://ru.hexlet.io/courses', tempdir);
-    expect(fileExists(path.join(tempdir, 'ru-hexlet-io-courses.html'))).toBe(true);
+  it('download site.com', async () => {
+    nock('https://site.com')
+      .get('/blog/about')
+      .replyWithFile(200, getFixturePath('site-com-blog-about.html'))
+      .get('/blog/about/assets/styles.css')
+      .reply(200, 'File content')
+      .get('/blog/about')
+      .reply(200, 'File content')
+      .get('/photos/me.jpg')
+      .reply(200, 'File content')
+      .get('/assets/scripts.js')
+      .reply(200, 'File content');
+    const filesDir = path.join(tempdir, 'site-com-blog-about_files');
+    await pageLoader('https://site.com/blog/about', tempdir);
+    expect(fileExists(path.join(tempdir, 'site-com-blog-about.html'))).toBe(true);
+    expect(fileExists(path.join(filesDir, 'site-com-blog-about.html'))).toBe(true);
+    expect(fileExists(path.join(filesDir, 'site-com-assets-scripts.js'))).toBe(true);
+    expect(fileExists(path.join(filesDir, 'site-com-blog-about-assets-styles.css'))).toBe(true);
+    expect(fileExists(path.join(filesDir, 'site-com-photos-me.jpg'))).toBe(true);
+    const expected = readFile(getFixturePath('expected/site-com-blog-about.html'));
+    const replaced = readFile(path.join(tempdir, 'site-com-blog-about.html'));
+    expect(replaced).toEqual(expected);
   });
 });
