@@ -27,12 +27,9 @@ export const downloadFile = async (url, filepath) => {
   }
 };
 
-export default async (url, output) => {
+export default async (url, output = process.cwd()) => {
   if (!validUrl.isWebUri(url)) {
     throw new Error('Invalid url format');
-  }
-  if (!output) {
-    throw new Error('No output folder');
   }
   const { origin } = new URL(url);
   const resp = await axios.get(url);
