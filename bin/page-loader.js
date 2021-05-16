@@ -1,8 +1,9 @@
 #!/usr/bin/env node
 import debug from 'debug';
-import { program } from 'commander';
+import commander from 'commander';
 import pageLoader from '../index.js';
 
+const { program } = commander;
 const dbg = debug('page-loader');
 
 (async () => {

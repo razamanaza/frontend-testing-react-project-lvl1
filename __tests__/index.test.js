@@ -69,7 +69,6 @@ describe('pageLoader', () => {
     fs.rmSync(tempdir, { recursive: true });
   });
   it('input parameters check', () => {
-    expect(() => pageLoader('http://ya.ru')).rejects.toThrow('No output folder');
     expect(() => pageLoader()).rejects.toThrow('Invalid url format');
   });
   it('download site.com', async () => {
