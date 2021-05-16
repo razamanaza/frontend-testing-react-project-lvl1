@@ -9,7 +9,7 @@
     "node": ">=14"
   },
   "scripts": {
-    "test": "NODE_OPTIONS=--experimental-vm-modules npx jest --colors --runInBand --bail"
+    "test": "npx jest --colors --runInBand --bail"
   },
   "repository": {
     "type": "git",
@@ -21,11 +21,6 @@
     "url": "https://github.com/razamanaza/frontend-testing-react-project-lvl1/issues"
   },
   "type": "module",
-  "jest": {
-    "testEnvironment": "node",
-    "transform": {},
-    "testRunner": "jest-circus/runner"
-  },
   "homepage": "https://github.com/razamanaza/frontend-testing-react-project-lvl1#readme",
   "devDependencies": {
     "@jest/globals": "^26.6.2",
