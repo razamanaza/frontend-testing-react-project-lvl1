@@ -1,10 +1,11 @@
+/* eslint-disable jest/valid-expect */
 import * as fs from 'fs';
 import * as path from 'path';
 import * as os from 'os';
 import nock from 'nock';
 import { fileURLToPath } from 'url';
 import { downloadFile, default as pageLoader } from '../src/index';
-import { expect } from '@jest/globals';
+import { expect, it } from '@jest/globals';
 import { formatWithOptions } from 'util';
 
 const __filename = fileURLToPath(import.meta.url);
@@ -49,7 +50,6 @@ describe('downloadFile', () => {
     nock('https://ru.hexlet.io/')
       .get('/image.jpg')
       .reply(404, 'File not found');
-    // eslint-disable-next-line jest/valid-expect
     expect(downloadFile('https://ru.hexlet.io/image.jpg', '/')).rejects.toThrow();
   });
 });
@@ -67,6 +67,10 @@ describe('pageLoader', () => {
   });
   afterEach(() => {
     fs.rmSync(tempdir, { recursive: true });
+  });
+  it('input parameters check', () => {
+    expect(() => pageLoader('http://ya.ru')).rejects.toThrow('No output folder');
+    expect(() => pageLoader()).rejects.toThrow('Invalid url format');
   });
   it('download site.com', async () => {
     nock('https://site.com')
