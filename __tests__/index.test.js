@@ -60,7 +60,6 @@ describe('pageLoader', () => {
     tempdir = mkdtempSync(path.join(os.tmpdir(), 'page-loader-'));
   });
   afterEach(() => {
-    rmSync(tempdir, { recursive: true });
   });
   it('input parameters check', () => {
     expect(() => pageLoader()).rejects.toThrow('Invalid url format');
