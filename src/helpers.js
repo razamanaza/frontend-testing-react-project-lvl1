@@ -38,7 +38,7 @@ export const getResources = (html, href) => {
 };
 
 export const replaceResources = async (html, images, fileDir) => {
-  const $ = cheerio.load(html);
+  const $ = cheerio.load(html, { decodeEntities: false });
   resTypes.forEach((res) => {
     $(res.tag).each(function () {
       const src = $(this).attr(res.link);

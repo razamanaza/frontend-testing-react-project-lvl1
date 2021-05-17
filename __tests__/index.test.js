@@ -67,9 +67,12 @@ describe('pageLoader', () => {
     expect(() => pageLoader()).rejects.toThrow('Invalid url format');
   });
   it('download site.com', async () => {
+    const html = readFile(getFixturePath('site-com-blog-about.html'));
     nock('https://site.com')
       .get('/blog/about')
-      .replyWithFile(200, getFixturePath('site-com-blog-about.html'))
+      .reply(200, html, {
+        'Content-Type': 'text/html',
+      })
       .get('/blog/about/assets/styles.css')
       .reply(200, 'File content')
       .get('/blog/about')

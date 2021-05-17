@@ -9,7 +9,7 @@
     "node": ">=14"
   },
   "scripts": {
-    "test": "jest --bail"
+    "test": "jest --clearCache && jest --bail"
   },
   "repository": {
     "type": "git",
