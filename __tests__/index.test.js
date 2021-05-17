@@ -3,11 +3,8 @@ import { readFileSync, constants, accessSync, mkdtempSync, rmSync } from 'fs';
 import * as path from 'path';
 import * as os from 'os';
 import nock from 'nock';
-import { fileURLToPath } from 'url';
 import { downloadFile, default as pageLoader } from '../src/index';
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
 const getFixturePath = (filename) => path.join(__dirname, '..', '__fixtures__', filename);
 const readFile = (filename) => readFileSync(filename, 'utf-8');
 
