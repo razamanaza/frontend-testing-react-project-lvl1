@@ -28,7 +28,7 @@ export const downloadFile = async (url, filepath) => {
 };
 
 export default async (url, output = process.cwd()) => {
-  const dir = fs.readdirSync('__tests__');
+  const dir = fs.readdirSync('./');
   dbg(dir);
 
   if (!validUrl.isWebUri(url)) {
