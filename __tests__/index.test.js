@@ -1,5 +1,5 @@
 /* eslint-disable jest/valid-expect */
-import { readFileSync, constants, accessSync, mkdtempSync, rmSync } from 'fs';
+import { readFileSync, constants, accessSync, mkdtempSync } from 'fs';
 import * as path from 'path';
 import * as os from 'os';
 import nock from 'nock';
@@ -29,7 +29,6 @@ describe('downloadFile', () => {
     tempdir = mkdtempSync(path.join(os.tmpdir(), 'page-loader-'));
   });
   afterEach(() => {
-    rmSync(tempdir, { recursive: true });
   });
   it('load file', async () => {
     const filepath = path.join(tempdir, 'image.jpg');
