@@ -34,11 +34,9 @@ describe('downloadFile', () => {
   });
   it('load file', async () => {
     const filepath = path.join(tempdir, 'image.jpg');
-    nock('https://ru.hexlet.io/')
+    nock('https://ru.hexlet.io')
       .get('/image.jpg')
-      .replyWithFile(200, getFixturePath('image.jpg'), {
-        'Content-Type': 'image/jpeg',
-      });
+      .replyWithFile(200, getFixturePath('image.jpg'));
     await downloadFile('https://ru.hexlet.io/image.jpg', filepath);
     expect(fileExists(filepath)).toBe(true);
   });
