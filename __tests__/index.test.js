@@ -122,4 +122,10 @@ describe('pageLoader', () => {
     const replaced = readFile(path.join(tempdir, 'localhost-blog-about.html'));
     expect(replaced).toEqual(expected);
   });
+  it('Network errors', async () => {
+    nock('https://ru.hexlet.io/')
+      .get('/image.jpg')
+      .reply(404, 'File not found');
+    expect(downloadFile('https://ru.hexlet.io/image.jpg', '/')).rejects.toThrow();
+  });
 });
