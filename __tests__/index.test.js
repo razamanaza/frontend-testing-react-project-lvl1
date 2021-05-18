@@ -5,6 +5,7 @@ import * as os from 'os';
 import nock from 'nock';
 import debug from 'debug';
 import { downloadFile, default as pageLoader } from '../src/index';
+import { expect } from '@jest/globals';
 
 const dbg = debug('page-loader');
 const getFixturePath = (filename) => path.join(__dirname, '..', '__fixtures__', filename);
@@ -65,38 +66,67 @@ describe('pageLoader', () => {
     expect(() => pageLoader()).rejects.toThrow('Invalid url format');
   });
   it('download site.com', async () => {
-    const html = readFile(getFixturePath('site-com-blog-about.html'));
-    const filesDir = path.join(tempdir, 'site-com-blog-about_files');
-    const expectedAbout = path.join(__dirname, '..', '__fixtures__', 'expected', 'site-com-blog-about_files', 'site-com-blog-about.html');
+    const outputFilesDir = path.join(tempdir, 'site-com-blog-about_files');
+    const expectedFilesDir = path.join(__dirname, '..', '__fixtures__', 'expected', 'site-com-blog-about_files');
+    const data = {
+      html: {
+        input: getFixturePath('site-com-blog-about.html'),
+        output: path.join(outputFilesDir, 'site-com-blog-about.html'),
+        expected: path.join(expectedFilesDir, 'site-com-blog-about.html'),
+      },
+      htmlAsset: {
+        input: path.join(expectedFilesDir, 'site-com-blog-about.html'),
+        output: path.join(outputFilesDir, 'site-com-blog-about.html'),
+        expected: path.join(expectedFilesDir, 'site-com-blog-about.html'),
+      },
+      img: {
+        input: path.join(expectedFilesDir, 'site-com-photos-me.jpg'),
+        output: path.join(outputFilesDir, 'site-com-photos-me.jpg'),
+        expected: path.join(expectedFilesDir, 'site-com-photos-me.jpg'),
+      },
+      js: {
+        input: path.join(expectedFilesDir, 'site-com-assets-scripts.js'),
+        output: path.join(outputFilesDir, 'site-com-assets-scripts.js'),
+        expected: path.join(expectedFilesDir, 'site-com-assets-scripts.js'),
+      },
+      css: {
+        input: path.join(expectedFilesDir, 'site-com-blog-about-assets-styles.css'),
+        output: path.join(outputFilesDir, 'site-com-blog-about-assets-styles.css'),
+        expected: path.join(expectedFilesDir, 'site-com-blog-about-assets-styles.css'),
+      },
+    };
     nock('https://site.com')
       .get('/blog/about')
-      .reply(200, html, {
-        'Content-Type': 'text/html',
-      })
+      .replyWithFile(200, data.html.input)
       .get('/blog/about/assets/styles.css')
-      .reply(200, 'File content')
+      .replyWithFile(200, data.css.input)
       .get('/blog/about')
-      .replyWithFile(200, expectedAbout)
+      .replyWithFile(200, data.htmlAsset.input)
       .get('/photos/me.jpg')
-      .reply(200, 'File content')
+      .replyWithFile(200, data.img.input)
       .get('/assets/scripts.js')
-      .reply(200, 'File content');
+      .replyWithFile(200, data.js.input);
+
     await pageLoader('https://site.com/blog/about', tempdir);
-    expect(fileExists(path.join(filesDir, 'site-com-assets-scripts.js'))).toBe(true);
-    let content = readFile(path.join(filesDir, 'site-com-assets-scripts.js'));
-    expect(content).toEqual('File content');
-    expect(fileExists(path.join(filesDir, 'site-com-blog-about.html'))).toBe(true);
-    content = readFile(path.join(filesDir, 'site-com-blog-about.html'));
-    expect(content).toEqual(readFile(expectedAbout));
-    expect(fileExists(path.join(filesDir, 'site-com-blog-about-assets-styles.css'))).toBe(true);
-    content = readFile(path.join(filesDir, 'site-com-blog-about-assets-styles.css'));
-    expect(content).toEqual('File content');
-    expect(fileExists(path.join(filesDir, 'site-com-photos-me.jpg'))).toBe(true);
-    content = readFile(path.join(filesDir, 'site-com-photos-me.jpg'));
-    expect(content).toEqual('File content');
-    expect(fileExists(path.join(tempdir, 'site-com-blog-about.html'))).toBe(true);
-    const expected = readFile(getFixturePath('expected/site-com-blog-about.html'));
-    const replaced = readFile(path.join(tempdir, 'site-com-blog-about.html'));
-    expect(replaced).toEqual(expected);
+
+    // Main html
+    expect(fileExists(data.html.output)).toBe(true);
+    expect(readFile(data.html.output)).toEqual(readFile(data.html.expected));
+
+    // Asset html
+    expect(fileExists(data.htmlAsset.output)).toBe(true);
+    expect(readFile(data.htmlAsset.output)).toEqual(readFile(data.htmlAsset.expected));
+
+    // JS
+    expect(fileExists(data.js.output)).toBe(true);
+    expect(readFile(data.js.output)).toEqual(readFile(data.js.expected));
+
+    // CSS
+    expect(fileExists(data.css.output)).toBe(true);
+    expect(readFile(data.css.output)).toEqual(readFile(data.css.expected));
+
+    // Image
+    expect(fileExists(data.img.output)).toBe(true);
+    expect(readFile(data.img.output)).toEqual(readFile(data.img.expected));
   });
 });
