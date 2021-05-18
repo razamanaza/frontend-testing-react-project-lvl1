@@ -51,6 +51,7 @@ describe('downloadFile', () => {
 
 describe('pageLoader', () => {
   let tempdir;
+  let data;
   beforeAll(() => {
     nock.disableNetConnect();
   });
@@ -59,16 +60,9 @@ describe('pageLoader', () => {
   });
   beforeEach(() => {
     tempdir = mkdtempSync(path.join(os.tmpdir(), 'page-loader-'));
-  });
-  afterEach(() => {
-  });
-  it('input parameters check', () => {
-    expect(() => pageLoader()).rejects.toThrow('Invalid url format');
-  });
-  it('download site.com', async () => {
     const outputFilesDir = path.join(tempdir, 'site-com-blog-about_files');
     const expectedFilesDir = path.join(__dirname, '..', '__fixtures__', 'expected', 'site-com-blog-about_files');
-    const data = {
+    data = {
       html: {
         input: getFixturePath('site-com-blog-about.html'),
         output: path.join(outputFilesDir, 'site-com-blog-about.html'),
@@ -97,36 +91,64 @@ describe('pageLoader', () => {
     };
     nock('https://site.com')
       .get('/blog/about')
-      .replyWithFile(200, data.html.input)
+      .replyWithFile(200, data.html.input, {
+        'Content-Type': 'text/html',
+      })
       .get('/blog/about/assets/styles.css')
-      .replyWithFile(200, data.css.input)
+      .replyWithFile(200, data.css.input, {
+        'Content-Type': 'text/css',
+      })
       .get('/blog/about')
-      .replyWithFile(200, data.htmlAsset.input)
+      .replyWithFile(200, data.htmlAsset.input, {
+        'Content-Type': 'text/html',
+      })
       .get('/photos/me.jpg')
-      .replyWithFile(200, data.img.input)
+      .replyWithFile(200, data.img.input, {
+        'Content-Type': 'image/jpeg',
+      })
       .get('/assets/scripts.js')
-      .replyWithFile(200, data.js.input);
-
+      .replyWithFile(200, data.js.input, {
+        'Content-Type': 'text/javascript',
+      });
+  });
+  afterEach(() => {
+    nock.cleanAll();
+  });
+  it('input parameters check', () => {
+    expect(() => pageLoader()).rejects.toThrow('Invalid url format');
+  });
+  it('download main html', async () => {
     await pageLoader('https://site.com/blog/about', tempdir);
 
-    // Main html
     expect(fileExists(data.html.output)).toBe(true);
     expect(readFile(data.html.output)).toEqual(readFile(data.html.expected));
+  });
 
-    // Asset html
+  it('download asset html', async () => {
+    await pageLoader('https://site.com/blog/about', tempdir);
+
     expect(fileExists(data.htmlAsset.output)).toBe(true);
     expect(readFile(data.htmlAsset.output)).toEqual(readFile(data.htmlAsset.expected));
+  });
 
-    // JS
-    expect(fileExists(data.js.output)).toBe(true);
-    expect(readFile(data.js.output)).toEqual(readFile(data.js.expected));
+  it('download img', async () => {
+    await pageLoader('https://site.com/blog/about', tempdir);
 
-    // CSS
-    expect(fileExists(data.css.output)).toBe(true);
-    expect(readFile(data.css.output)).toEqual(readFile(data.css.expected));
-
-    // Image
     expect(fileExists(data.img.output)).toBe(true);
     expect(readFile(data.img.output)).toEqual(readFile(data.img.expected));
+  });
+
+  it('download css', async () => {
+    await pageLoader('https://site.com/blog/about', tempdir);
+
+    expect(fileExists(data.css.output)).toBe(true);
+    expect(readFile(data.css.output)).toEqual(readFile(data.css.expected));
+  });
+
+  it('download js', async () => {
+    await pageLoader('https://site.com/blog/about', tempdir);
+
+    expect(fileExists(data.js.output)).toBe(true);
+    expect(readFile(data.js.output)).toEqual(readFile(data.js.expected));
   });
 });
