@@ -3,8 +3,10 @@ import { readFileSync, constants, accessSync, mkdtempSync, writeFileSync } from 
 import * as path from 'path';
 import * as os from 'os';
 import nock from 'nock';
+import debug from 'debug';
 import { downloadFile, default as pageLoader } from '../src/index';
 
+const dbg = debug('page-loader');
 const getFixturePath = (filename) => path.join(__dirname, '..', '__fixtures__', filename);
 const readFile = (filename) => readFileSync(filename, 'utf-8');
 
@@ -122,12 +124,7 @@ describe('pageLoader', () => {
     expect(fileExists(path.join(filesDir, 'localhost-photos-me.jpg'))).toBe(true);
     const expected = readFile(getFixturePath('expected/localhost-blog-about.html'));
     const replaced = readFile(path.join(tempdir, 'localhost-blog-about.html'));
+    dbg(replaced);
     expect(replaced).toEqual(expected);
-  });
-  it('Network errors', async () => {
-    nock('https://ru.hexlet.io/')
-      .get('/image.jpg')
-      .reply(404, 'File not found');
-    expect(downloadFile('https://ru.hexlet.io/image.jpg', '/')).rejects.toThrow();
   });
 });
