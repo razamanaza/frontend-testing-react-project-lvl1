@@ -1,19 +1,18 @@
 /* eslint-disable jest/valid-expect */
-import { readFileSync, constants, accessSync, mkdtempSync, writeFileSync } from 'fs';
+import * as fs from 'fs';
 import * as path from 'path';
 import * as os from 'os';
 import nock from 'nock';
 import debug from 'debug';
 import { downloadFile, default as pageLoader } from '../src/index';
-import { expect } from '@jest/globals';
 
 const dbg = debug('page-loader');
 const getFixturePath = (filename) => path.join(__dirname, '..', '__fixtures__', filename);
-const readFile = (filename) => readFileSync(filename, 'utf-8');
+const readFile = async (filename) => fs.promises.writeFile(filename, 'utf-8');
 
 const fileExists = (file) => {
   try {
-    accessSync(file, constants.R_OK || constants.W_OK);
+    fs.accessSync(file, fs.constants.R_OK || fs.constants.W_OK);
     return true;
   } catch (err) {
     return false;
@@ -29,7 +28,7 @@ describe('downloadFile', () => {
     nock.enableNetConnect();
   });
   beforeEach(() => {
-    tempdir = mkdtempSync(path.join(os.tmpdir(), 'page-loader-'));
+    tempdir = fs.mkdtempSync(path.join(os.tmpdir(), 'page-loader-'));
   });
   afterEach(() => {
   });
@@ -59,7 +58,7 @@ describe('pageLoader', () => {
     nock.enableNetConnect();
   });
   beforeEach(() => {
-    tempdir = mkdtempSync(path.join(os.tmpdir(), 'page-loader-'));
+    tempdir = fs.mkdtempSync(path.join(os.tmpdir(), 'page-loader-'));
     const outputFilesDir = path.join(tempdir, 'site-com-blog-about_files');
     const expectedFilesDir = path.join(__dirname, '..', '__fixtures__', 'expected', 'site-com-blog-about_files');
     data = {
@@ -121,34 +120,34 @@ describe('pageLoader', () => {
     await pageLoader('https://site.com/blog/about', tempdir);
 
     expect(fileExists(data.html.output)).toBe(true);
-    expect(readFile(data.html.output)).toEqual(readFile(data.html.expected));
+    expect(await readFile(data.html.output)).toEqual(await readFile(data.html.expected));
   });
 
   it('download asset html', async () => {
     await pageLoader('https://site.com/blog/about', tempdir);
 
     expect(fileExists(data.htmlAsset.output)).toBe(true);
-    expect(readFile(data.htmlAsset.output)).toEqual(readFile(data.htmlAsset.expected));
+    expect(await readFile(data.htmlAsset.output)).toEqual(await readFile(data.htmlAsset.expected));
   });
 
   it('download img', async () => {
     await pageLoader('https://site.com/blog/about', tempdir);
 
     expect(fileExists(data.img.output)).toBe(true);
-    expect(readFile(data.img.output)).toEqual(readFile(data.img.expected));
+    expect(await readFile(data.img.output)).toEqual(await readFile(data.img.expected));
   });
 
   it('download css', async () => {
     await pageLoader('https://site.com/blog/about', tempdir);
 
     expect(fileExists(data.css.output)).toBe(true);
-    expect(readFile(data.css.output)).toEqual(readFile(data.css.expected));
+    expect(await readFile(data.css.output)).toEqual(await readFile(data.css.expected));
   });
 
   it('download js', async () => {
     await pageLoader('https://site.com/blog/about', tempdir);
 
     expect(fileExists(data.js.output)).toBe(true);
-    expect(readFile(data.js.output)).toEqual(readFile(data.js.expected));
+    expect(await readFile(data.js.output)).toEqual(await readFile(data.js.expected));
   });
 });
