@@ -81,10 +81,11 @@ describe('pageLoader', () => {
       .reply(200, 'File content');
     const filesDir = path.join(tempdir, 'site-com-blog-about_files');
     await pageLoader('https://site.com/blog/about', tempdir);
-    expect(fileExists(path.join(tempdir, 'site-com-blog-about.html'))).toBe(true);
-    expect(fileExists(path.join(filesDir, 'site-com-blog-about.html'))).toBe(true);
     expect(fileExists(path.join(filesDir, 'site-com-assets-scripts.js'))).toBe(true);
     let content = readFile(path.join(filesDir, 'site-com-assets-scripts.js'));
+    expect(content).toEqual('File content');
+    expect(fileExists(path.join(filesDir, 'site-com-blog-about.html'))).toBe(true);
+    content = readFile(path.join(filesDir, 'site-com-blog-about.html'));
     expect(content).toEqual('File content');
     expect(fileExists(path.join(filesDir, 'site-com-blog-about-assets-styles.css'))).toBe(true);
     content = readFile(path.join(filesDir, 'site-com-blog-about-assets-styles.css'));
@@ -92,6 +93,7 @@ describe('pageLoader', () => {
     expect(fileExists(path.join(filesDir, 'site-com-photos-me.jpg'))).toBe(true);
     content = readFile(path.join(filesDir, 'site-com-photos-me.jpg'));
     expect(content).toEqual('File content');
+    expect(fileExists(path.join(tempdir, 'site-com-blog-about.html'))).toBe(true);
     const expected = readFile(getFixturePath('expected/site-com-blog-about.html'));
     const replaced = readFile(path.join(tempdir, 'site-com-blog-about.html'));
     expect(replaced).toEqual(expected);
