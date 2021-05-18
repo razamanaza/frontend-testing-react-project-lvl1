@@ -1,5 +1,5 @@
 /* eslint-disable jest/valid-expect */
-import { readFileSync, constants, accessSync, mkdtempSync } from 'fs';
+import { readFileSync, constants, accessSync, mkdtempSync, writeFileSync } from 'fs';
 import * as path from 'path';
 import * as os from 'os';
 import nock from 'nock';
