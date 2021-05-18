@@ -28,9 +28,6 @@ export const downloadFile = async (url, filepath) => {
 };
 
 export default async (url, output = process.cwd()) => {
-  const dir = fs.readdirSync('./__tests__');
-  dbg(dir);
-
   if (!validUrl.isWebUri(url)) {
     throw new Error('Invalid url format');
   }
