@@ -32,14 +32,14 @@ describe('downloadFile', () => {
   });
   afterEach(() => {
   });
-  it('load file', async () => {
-    const filepath = path.join(tempdir, 'image.jpg');
-    nock('https://ru.hexlet.io')
-      .get('/image.jpg')
-      .replyWithFile(200, getFixturePath('image.jpg'));
-    await downloadFile('https://ru.hexlet.io/image.jpg', filepath);
-    expect(fileExists(filepath)).toBe(true);
-  });
+  // it('load file', async () => {
+  //   const filepath = path.join(tempdir, 'image.jpg');
+  //   nock('https://ru.hexlet.io')
+  //     .get('/image.jpg')
+  //     .replyWithFile(200, getFixturePath('image.jpg'));
+  //   await downloadFile('https://ru.hexlet.io/image.jpg', filepath);
+  //   expect(fileExists(filepath)).toBe(true);
+  // });
   it('Network errors', async () => {
     nock('https://ru.hexlet.io/')
       .get('/image.jpg')
