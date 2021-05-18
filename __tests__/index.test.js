@@ -140,6 +140,8 @@ describe('pageLoader', () => {
   it('download css', async () => {
     await pageLoader('https://site.com/blog/about', tempdir);
 
+    dbg(await readFile(data.css.output));
+    dbg(await readFile(data.css.expected));
     expect(fileExists(data.css.output)).toBe(true);
     expect(await readFile(data.css.output)).toEqual(await readFile(data.css.expected));
   });
