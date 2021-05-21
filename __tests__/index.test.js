@@ -1,5 +1,5 @@
 /* eslint-disable jest/valid-expect */
-import { readFileSync, constants, accessSync, mkdtempSync, writeFileSync } from 'fs';
+import * as fs from 'fs';
 import * as path from 'path';
 import * as os from 'os';
 import nock from 'nock';
@@ -8,38 +8,15 @@ import { downloadFile, default as pageLoader } from '../src/index';
 
 const dbg = debug('page-loader');
 const getFixturePath = (filename) => path.join(__dirname, '..', '__fixtures__', filename);
-const readFile = (filename) => readFileSync(filename, 'utf-8');
-
-const fileExists = (file) => {
-  try {
-    accessSync(file, constants.R_OK || constants.W_OK);
-    return true;
-  } catch (err) {
-    return false;
-  }
-};
+const readFile = (filename) => fs.readFileSync(filename, 'utf-8');
 
 describe('downloadFile', () => {
-  let tempdir;
   beforeAll(() => {
     nock.disableNetConnect();
   });
   afterAll(() => {
     nock.enableNetConnect();
   });
-  beforeEach(() => {
-    tempdir = mkdtempSync(path.join(os.tmpdir(), 'page-loader-'));
-  });
-  afterEach(() => {
-  });
-  // it('load file', async () => {
-  //   const filepath = path.join(tempdir, 'image.jpg');
-  //   nock('https://ru.hexlet.io')
-  //     .get('/image.jpg')
-  //     .replyWithFile(200, getFixturePath('image.jpg'));
-  //   await downloadFile('https://ru.hexlet.io/image.jpg', filepath);
-  //   expect(fileExists(filepath)).toBe(true);
-  // });
   it('Network errors', async () => {
     nock('https://ru.hexlet.io/')
       .get('/image.jpg')
@@ -58,7 +35,8 @@ describe('pageLoader', () => {
     nock.enableNetConnect();
   });
   beforeEach(() => {
-    tempdir = mkdtempSync(path.join(os.tmpdir(), 'page-loader-'));
+    // tempdir = fs.mkdtempSync(path.join(os.tmpdir(), 'page-loader-'));
+    tempdir = process.cwd();
     const outputFilesDir = path.join(tempdir, 'site-com-blog-about_files');
     const expectedFilesDir = path.join(__dirname, '..', '__fixtures__', 'expected', 'site-com-blog-about_files');
     data = {
@@ -90,23 +68,23 @@ describe('pageLoader', () => {
     };
     nock('https://site.com')
       .get('/blog/about')
-      .replyWithFile(200, data.html.input, {
+      .reply(200, readFile(data.html.input), {
         'Content-Type': 'text/html',
       })
       .get('/blog/about/assets/styles.css')
-      .replyWithFile(200, data.css.input, {
+      .reply(200, readFile(data.css.input), {
         'Content-Type': 'text/css',
       })
       .get('/blog/about')
-      .replyWithFile(200, data.htmlAsset.input, {
+      .reply(200, readFile(data.htmlAsset.input), {
         'Content-Type': 'text/html',
       })
       .get('/photos/me.jpg')
-      .replyWithFile(200, data.img.input, {
+      .reply(200, readFile(data.img.input), {
         'Content-Type': 'image/jpeg',
       })
       .get('/assets/scripts.js')
-      .replyWithFile(200, data.js.input, {
+      .reply(200, readFile(data.js.input), {
         'Content-Type': 'text/javascript',
       });
   });
@@ -119,38 +97,35 @@ describe('pageLoader', () => {
   it('download main html', async () => {
     await pageLoader('https://site.com/blog/about', tempdir);
 
-    expect(fileExists(data.html.output)).toBe(true);
+    await expect(fs.promises.access(data.html.output)).resolves.not.toThrow();
     expect(readFile(data.html.output)).toEqual(readFile(data.html.expected));
   });
 
   it('download asset html', async () => {
     await pageLoader('https://site.com/blog/about', tempdir);
 
-    expect(fileExists(data.htmlAsset.output)).toBe(true);
+    await expect(fs.promises.access(data.htmlAsset.output)).resolves.not.toThrow();
     expect(readFile(data.htmlAsset.output)).toEqual(readFile(data.htmlAsset.expected));
   });
 
   it('download img', async () => {
     await pageLoader('https://site.com/blog/about', tempdir);
 
-    expect(fileExists(data.img.output)).toBe(true);
+    await expect(fs.promises.access(data.img.output)).resolves.not.toThrow();
     expect(readFile(data.img.output)).toEqual(readFile(data.img.expected));
   });
 
   it('download css', async () => {
     await pageLoader('https://site.com/blog/about', tempdir);
 
-    dbg(data);
-    dbg(readFile(data.css.output));
-    dbg(readFile(data.css.expected));
-    expect(fileExists(data.css.output)).toBe(true);
+    await expect(fs.promises.access(data.css.output)).resolves.not.toThrow();
     expect(readFile(data.css.output)).toEqual(readFile(data.css.expected));
   });
 
   it('download js', async () => {
     await pageLoader('https://site.com/blog/about', tempdir);
 
-    expect(fileExists(data.js.output)).toBe(true);
+    await expect(fs.promises.access(data.js.output)).resolves.not.toThrow();
     expect(readFile(data.js.output)).toEqual(readFile(data.js.expected));
   });
 });
