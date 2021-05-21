@@ -13,16 +13,15 @@ axios.defaults.adapter = http;
 
 export const downloadFile = async (url, filepath) => {
   try {
-    // const response = await axios({
-    //   method: 'get',
-    //   url,
-    //   responseType: 'stream',
-    // });
-    // if (response.status !== 200) {
-    //   throw new Error(`${response.statusText}`);
-    // }
-    // await response.data.pipe(fs.createWriteStream(filepath));
-    await fs.promises.writeFile(filepath, 'something');
+    const response = await axios({
+      method: 'get',
+      url,
+      responseType: 'stream',
+    });
+    if (response.status !== 200) {
+      throw new Error(`${response.statusText}`);
+    }
+    await response.data.pipe(fs.createWriteStream(filepath));
   } catch (e) {
     throw new Error(`Failed to download ${url}. ${e.message}`);
   }
