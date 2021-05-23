@@ -35,8 +35,7 @@ describe('pageLoader', () => {
     nock.enableNetConnect();
   });
   beforeEach(() => {
-    // tempdir = fs.mkdtempSync(path.join(os.tmpdir(), 'page-loader-'));
-    tempdir = process.cwd();
+    tempdir = fs.mkdtempSync(path.join(os.tmpdir(), 'page-loader-'));
     const outputFilesDir = path.join(tempdir, 'site-com-blog-about_files');
     const expectedFilesDir = path.join(__dirname, '..', '__fixtures__', 'expected', 'site-com-blog-about_files');
     data = {
