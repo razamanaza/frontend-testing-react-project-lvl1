@@ -10,21 +10,6 @@ const dbg = debug('page-loader');
 const getFixturePath = (filename) => path.join(__dirname, '..', '__fixtures__', filename);
 const readFile = (filename) => fs.readFileSync(filename, 'utf-8');
 
-// describe('downloadFile', () => {
-//   beforeAll(() => {
-//     nock.disableNetConnect();
-//   });
-//   afterAll(() => {
-//     nock.enableNetConnect();
-//   });
-//   it('Network errors', async () => {
-//     nock('https://ru.hexlet.io/')
-//       .get('/image.jpg')
-//       .reply(404, 'File not found');
-//     expect(downloadFile('https://ru.hexlet.io/image.jpg', '/')).rejects.toThrow();
-//   });
-// });
-
 describe('pageLoader', () => {
   let tempdir;
   let data;
@@ -109,7 +94,7 @@ describe('pageLoader', () => {
     expect(readFile(data.htmlAsset.output)).toEqual(readFile(data.htmlAsset.expected));
   });
 
-  it.skip('download img', async () => {
+  it('download img', async () => {
     await pageLoader('https://site.com/blog/about', tempdir);
 
     await expect(fs.promises.access(data.img.output)).resolves.not.toThrow();
