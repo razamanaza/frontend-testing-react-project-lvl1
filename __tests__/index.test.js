@@ -24,8 +24,9 @@ describe('pageLoader', () => {
   afterEach(() => {
     nock.cleanAll();
   });
-  it('input parameters check', () => {
-    expect(() => pageLoader()).rejects.toThrow();
+  it.only('input parameters check', async () => {
+    await expect(() => pageLoader()).rejects.toThrow();
+    await expect(() => pageLoader('http://some.site', '/some/dir')).resolves;
   });
   it('download main html', async () => {
     nock('https://site.com').get('/blog/about').reply(200, readFile(getFixturePath('site-com-blog-about.html')))
