@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 import debug from 'debug';
 import commander from 'commander';
-import pageLoader from '../index.js';
+import pageLoader from '../src/index.js';
 
 const { program } = commander;
 const dbg = debug('page-loader');
