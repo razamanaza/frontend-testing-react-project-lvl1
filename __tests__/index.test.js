@@ -24,7 +24,7 @@ describe('pageLoader', () => {
   afterEach(() => {
     nock.cleanAll();
   });
-  it.only('input parameters check', async () => {
+  it('input parameters check', async () => {
     await expect(() => pageLoader()).rejects.toThrow();
     await expect(() => pageLoader('http://some.site', '/some/dir')).resolves;
   });
