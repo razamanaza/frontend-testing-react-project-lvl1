@@ -22,7 +22,6 @@ const downloadFile = async (url, filepath) => {
       throw new Error(`${response.statusText}`);
     }
     await response.data.pipe(fs.createWriteStream(filepath));
-    await fs.promises.writeFile(filepath, 'some content');
   } catch (e) {
     throw new Error(`Failed to download ${url}. ${e.message}`);
   }
