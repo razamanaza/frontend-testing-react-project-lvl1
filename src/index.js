@@ -16,12 +16,13 @@ const downloadFile = async (url, filepath) => {
     const response = await axios({
       method: 'get',
       url,
-      responseType: 'stream',
+      responseType: 'arraybuffer',
     });
     if (response.status !== 200) {
       throw new Error(`${response.statusText}`);
     }
-    await response.data.pipe(fs.createWriteStream(filepath));
+    const buffer = Buffer.from(response.data);
+    await fs.promises.writeFile(filepath, buffer);
   } catch (e) {
     throw new Error(`Failed to download ${url}. ${e.message}`);
   }
