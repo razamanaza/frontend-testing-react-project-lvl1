@@ -5,6 +5,7 @@ import * as os from 'os';
 import nock from 'nock';
 import debug from 'debug';
 import pageLoader from '../src/index';
+import { expect } from '@jest/globals';
 
 const dbg = debug('page-loader');
 const getFixturePath = (filename) => path.join(__dirname, '..', '__fixtures__', filename);
@@ -25,26 +26,18 @@ describe('pageLoader', () => {
     nock.cleanAll();
   });
   it('The test', async () => {
-    await expect(() => pageLoader()).rejects.toThrow();
-    await expect(() => pageLoader('http://some.site', '/some/dir')).resolves;
     nock('https://site.com').get('/blog/about').reply(200, readFile(getFixturePath('site-com-blog-about.html')))
+      .get('/').reply(200)
       .get('/blog/about/assets/styles.css').reply(200, 'css')
       .get('/blog/about').reply(200, 'html')
       .get('/photos/me.jpg').reply(200, 'img')
       .get('/assets/scripts.js').reply(200, 'js');
     const downloaded = path.join(tempdir, 'site-com-blog-about.html');
+    const assetsDir = path.join(tempdir, 'site-com-blog-about_files');
+    await expect(pageLoader('https://site.com', tempdir)).resolves;
     await pageLoader('https://site.com/blog/about', tempdir);
     await expect(fs.promises.access(downloaded)).resolves.not.toThrow();
     expect(readFile(downloaded)).toEqual(readFile(getFixturePath('expected-site-com-blog-about.html')));
-  });
-  it('download assets', async () => {
-    nock('https://site.com').get('/blog/about').reply(200, readFile(getFixturePath('site-com-blog-about.html')))
-      .get('/blog/about/assets/styles.css').reply(200, 'css')
-      .get('/blog/about').reply(200, 'html')
-      .get('/photos/me.jpg').reply(200, 'img')
-      .get('/assets/scripts.js').reply(200, 'js');
-    const assetsDir = path.join(tempdir, 'site-com-blog-about_files');
-    await pageLoader('https://site.com/blog/about', tempdir);
 
     // js
     const js = path.join(assetsDir, 'site-com-assets-scripts.js');
