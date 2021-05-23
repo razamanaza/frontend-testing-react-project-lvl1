@@ -5,7 +5,6 @@ import * as os from 'os';
 import nock from 'nock';
 import debug from 'debug';
 import pageLoader from '../src/index';
-import { expect } from '@jest/globals';
 
 const dbg = debug('page-loader');
 const getFixturePath = (filename) => path.join(__dirname, '..', '__fixtures__', filename);
