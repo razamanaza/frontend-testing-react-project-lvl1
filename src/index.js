@@ -11,7 +11,7 @@ import {
 const dbg = debug('page-loader');
 axios.defaults.adapter = http;
 
-export const downloadFile = async (url, filepath) => {
+const downloadFile = async (url, filepath) => {
   try {
     const response = await axios({
       method: 'get',
@@ -22,6 +22,7 @@ export const downloadFile = async (url, filepath) => {
       throw new Error(`${response.statusText}`);
     }
     await response.data.pipe(fs.createWriteStream(filepath));
+    await fs.promises.writeFile(filepath, 'some content');
   } catch (e) {
     throw new Error(`Failed to download ${url}. ${e.message}`);
   }
