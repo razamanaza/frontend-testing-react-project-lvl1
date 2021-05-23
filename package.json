@@ -9,7 +9,7 @@
     "node": ">=14"
   },
   "scripts": {
-    "test": "jest --colors --runInBand --bail --silent"
+    "test": "jest --colors --runInBand --bail"
   },
   "repository": {
     "type": "git",
