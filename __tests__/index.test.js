@@ -15,8 +15,6 @@ describe('pageLoader', () => {
   let data;
   beforeAll(() => {
     nock.disableNetConnect();
-    const src = readFile('../src/index.js');
-    dbg(src);
   });
   afterAll(() => {
     nock.enableNetConnect();
