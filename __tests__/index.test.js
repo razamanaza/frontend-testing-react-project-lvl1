@@ -65,9 +65,5 @@ describe('pageLoader', () => {
     const html = path.join(assetsDir, 'site-com-blog-about.html');
     await expect(fs.promises.access(html)).resolves.not.toThrow();
     await expect(readFile(html)).toEqual('html');
-
-    await fs.readdirSync(assetsDir).forEach(file => {
-      dbg(file);
-    });
   });
 });
