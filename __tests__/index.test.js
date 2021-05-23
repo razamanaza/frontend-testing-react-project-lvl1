@@ -4,32 +4,34 @@ import * as path from 'path';
 import * as os from 'os';
 import nock from 'nock';
 import debug from 'debug';
-import { downloadFile, default as pageLoader } from '../src/index';
+import pageLoader from '../src/index';
 
 const dbg = debug('page-loader');
 const getFixturePath = (filename) => path.join(__dirname, '..', '__fixtures__', filename);
 const readFile = (filename) => fs.readFileSync(filename, 'utf-8');
 
-describe('downloadFile', () => {
-  beforeAll(() => {
-    nock.disableNetConnect();
-  });
-  afterAll(() => {
-    nock.enableNetConnect();
-  });
-  it('Network errors', async () => {
-    nock('https://ru.hexlet.io/')
-      .get('/image.jpg')
-      .reply(404, 'File not found');
-    expect(downloadFile('https://ru.hexlet.io/image.jpg', '/')).rejects.toThrow();
-  });
-});
+// describe('downloadFile', () => {
+//   beforeAll(() => {
+//     nock.disableNetConnect();
+//   });
+//   afterAll(() => {
+//     nock.enableNetConnect();
+//   });
+//   it('Network errors', async () => {
+//     nock('https://ru.hexlet.io/')
+//       .get('/image.jpg')
+//       .reply(404, 'File not found');
+//     expect(downloadFile('https://ru.hexlet.io/image.jpg', '/')).rejects.toThrow();
+//   });
+// });
 
 describe('pageLoader', () => {
   let tempdir;
   let data;
   beforeAll(() => {
     nock.disableNetConnect();
+    const src = readFile('../src/index.js');
+    dbg(src);
   });
   afterAll(() => {
     nock.enableNetConnect();
