@@ -1,0 +1,32 @@
+name: build
+on:
+  push:
+    branches:
+      - master
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@master
+    - uses: actions/setup-node@master
+      with:
+          node-version: '14'
+      with:
+        node-version: ${{ matrix.node }}
+    - run: npm ci
+    - run: npm test
+  coverage:
+    needs: [ test ]
+    name: coverage
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@master
+    - uses: actions/setup-node@master
+      with:
+        node-version: '14'
+    - run: npm ci
+    - uses: paambaati/codeclimate-action@v2.2.4
+      env:
+        CC_TEST_REPORTER_ID: 8e688122e309189c9126296f598b4018be581d6926c159fc655cc026706e4733
+      with:
+        coverageCommand: yarn coverage
