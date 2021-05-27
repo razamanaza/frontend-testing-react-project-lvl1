@@ -33,7 +33,6 @@ describe('pageLoader', () => {
       .get('/assets/scripts.js').reply(200, 'js');
     const downloaded = path.join(tempdir, 'site-com-blog-about.html');
     const assetsDir = path.join(tempdir, 'site-com-blog-about_files');
-    await expect(pageLoader('https://site.com', tempdir)).resolves;
     await pageLoader('https://site.com/blog/about', tempdir);
     await expect(fs.promises.access(downloaded)).resolves.not.toThrow();
     expect(readFile(downloaded)).toEqual(readFile(getFixturePath('expected-site-com-blog-about.html')));
