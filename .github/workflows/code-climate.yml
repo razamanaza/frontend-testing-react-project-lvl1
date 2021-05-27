@@ -11,8 +11,6 @@ jobs:
     - uses: actions/setup-node@master
       with:
           node-version: '14'
-      with:
-        node-version: ${{ matrix.node }}
     - run: npm ci
     - run: npm test
   coverage:
