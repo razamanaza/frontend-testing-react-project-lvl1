@@ -8,6 +8,7 @@ import {
   getFilename, getResources, replaceResources, slugify,
 } from './helpers.js';
 
+
 const dbg = debug('page-loader');
 axios.defaults.adapter = http;
 
