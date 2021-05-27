@@ -10,7 +10,8 @@
     "node": ">=14"
   },
   "scripts": {
-    "test": "jest --colors --runInBand --bail"
+    "test": "jest --colors --runInBand --bail",
+    "test:coverage": "jest --coverage"
   },
   "repository": {
     "type": "git",
