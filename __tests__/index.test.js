@@ -61,4 +61,3 @@ describe('pageLoader', () => {
     await expect(readFile(html)).toEqual('html');
   });
 });
-
