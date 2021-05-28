@@ -3,10 +3,8 @@ import * as fs from 'fs';
 import * as path from 'path';
 import * as os from 'os';
 import nock from 'nock';
-import debug from 'debug';
 import pageLoader from '../src/index';
 
-const dbg = debug('page-loader');
 const getFixturePath = (filename) => path.join(__dirname, '..', '__fixtures__', filename);
 const readFile = (filename) => fs.readFileSync(filename, 'utf-8');
 
@@ -24,13 +22,18 @@ describe('pageLoader', () => {
   afterEach(() => {
     nock.cleanAll();
   });
-  it('The test', async () => {
+  it('Fake content test', async () => {
     nock('https://site.com').get('/blog/about').reply(200, readFile(getFixturePath('site-com-blog-about.html')))
-      .get('/').reply(200)
-      .get('/blog/about/assets/styles.css').reply(200, 'css')
-      .get('/blog/about').reply(200, 'html')
-      .get('/photos/me.jpg').reply(200, 'img')
-      .get('/assets/scripts.js').reply(200, 'js');
+      .get('/')
+      .reply(200)
+      .get('/blog/about/assets/styles.css')
+      .reply(200, 'css')
+      .get('/blog/about')
+      .reply(200, 'html')
+      .get('/photos/me.jpg')
+      .reply(200, 'img')
+      .get('/assets/scripts.js')
+      .reply(200, 'js');
     const downloaded = path.join(tempdir, 'site-com-blog-about.html');
     const assetsDir = path.join(tempdir, 'site-com-blog-about_files');
     await pageLoader('https://site.com/blog/about', tempdir);
@@ -58,3 +61,4 @@ describe('pageLoader', () => {
     await expect(readFile(html)).toEqual('html');
   });
 });
+

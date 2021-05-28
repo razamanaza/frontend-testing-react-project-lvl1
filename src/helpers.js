@@ -1,3 +1,4 @@
+/* eslint-disable func-names */
 import cheerio from 'cheerio';
 import * as path from 'path';
 
