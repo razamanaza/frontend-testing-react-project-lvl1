@@ -1,15 +1,12 @@
 import axios from 'axios';
 import * as fs from 'fs';
 import * as path from 'path';
-import debug from 'debug';
 import validUrl from 'valid-url';
 import http from 'axios/lib/adapters/http.js';
 import {
   getFilename, getResources, replaceResources, slugify,
 } from './helpers.js';
 
-
-const dbg = debug('page-loader');
 axios.defaults.adapter = http;
 
 const downloadFile = async (url, filepath) => {
@@ -38,11 +35,12 @@ export default async (url, output = process.cwd()) => {
   const html = resp.data;
   const filePath = `${path.join(output, getFilename(url))}`;
   const fileDir = `${path.join(output, slugify(url))}_files`;
-  const resources = getResources(html, origin);
+  const rs = getResources(html, origin);
   await fs.promises.mkdir(fileDir, { recursive: true });
-  await Promise.all(Object.values(resources).map((res) =>
-    downloadFile(res.url, path.join(fileDir, res.filename))));
-  const htmlReplaced = await replaceResources(html, resources, `${slugify(url)}_files`);
+  await Promise.all(
+    Object.values(rs).map((res) => downloadFile(res.url, path.join(fileDir, res.filename))),
+  );
+  const htmlReplaced = await replaceResources(html, rs, `${slugify(url)}_files`);
   await fs.promises.writeFile(filePath, htmlReplaced, 'utf-8');
   return `Files downloaded into ${output}`;
 };
