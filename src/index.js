@@ -16,8 +16,7 @@ const downloadFile = async (url, filepath) => {
     if (response.status !== 200) {
       throw new Error(`${response.statusText}`);
     }
-    const buffer = Buffer.from(response.data);
-    await fs.promises.writeFile(filepath, buffer);
+    await fs.promises.writeFile(filepath, response.data);
   } catch (e) {
     throw new Error(`Failed to download ${url}. ${e.message}`);
   }
@@ -30,7 +29,7 @@ export default async (url, output = process.cwd()) => {
   const { origin } = new URL(url);
   const resp = await axios.get(url);
   const html = resp.data;
-  const filePath = `${path.join(output, getFilename(url))}`;
+  const filePath = path.join(output, getFilename(url));
   const fileDir = `${path.join(output, slugify(url))}_files`;
   const rs = getResources(html, origin);
   await fs.promises.mkdir(fileDir, { recursive: true });
