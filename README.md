@@ -6,4 +6,22 @@
 
 PageLoader – утилита командной строки, которая скачивает страницы из интернета и сохраняет их на компьютере. Вместе со страницей она скачивает все ресурсы (картинки, стили и js) давая возможность открывать страницу без интернета.
 
-[![asciicast](https://asciinema.org/a/gjufOAbYbprREkdnqxkCCE09I.png)](https://asciinema.org/a/gjufOAbYbprREkdnqxkCCE09I)
+### Step 1
+
+[![asciicast](https://asciinema.org/a/ybhkppPdr4bRiOAwVGgeXogTU.png)](https://asciinema.org/a/ybhkppPdr4bRiOAwVGgeXogTU)
+
+### Step 2
+
+[![asciicast](https://asciinema.org/a/NeEv5PineuKQ7BaSRe30DtLWG.png)](https://asciinema.org/a/NeEv5PineuKQ7BaSRe30DtLWG)
+
+### Step 3
+
+[![asciicast](https://asciinema.org/a/NeEv5PineuKQ7BaSRe30DtLWG.png)](https://asciinema.org/a/NeEv5PineuKQ7BaSRe30DtLWG)
+
+### Step 4
+
+[![asciicast](https://asciinema.org/a/7QOYUlikcmZ7ry9anxPWlAtO6.png)](https://asciinema.org/a/7QOYUlikcmZ7ry9anxPWlAtO6)
+
+### Step 5
+
+[![asciicast](https://asciinema.org/a/QeemDvv9RtSERY93FRSRLu8gg.png)](https://asciinema.org/a/QeemDvv9RtSERY93FRSRLu8gg)

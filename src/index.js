@@ -2,6 +2,8 @@ import axios from 'axios';
 import * as fs from 'fs';
 import * as path from 'path';
 import validUrl from 'valid-url';
+// eslint-disable-next-line no-unused-vars
+import * as axiosDebug from 'axios-debug-log';
 import {
   getFilename, getResources, replaceResources, slugify,
 } from './helpers.js';
