@@ -9,8 +9,8 @@ const expected = [
   'site-com-assets-scripts.js',
   'site-com-blog-about.html',
   'site-com-blog-about-assets-styles.css',
-  'site-com-photos-me.jpg'
-]
+  'site-com-photos-me.jpg',
+];
 const getFixturePath = (filename) => path.join(__dirname, '..', '__fixtures__', filename);
 const getExpectedPath = (filename) => path.join(__dirname, '..', '__fixtures__', 'expected', filename);
 const readFile = (filename) => fs.readFileSync(filename, 'utf-8');
@@ -40,8 +40,8 @@ describe('pageLoader', () => {
   afterEach(() => {
     nock.cleanAll();
   });
-  it('Main page', async () => {    
-    const downloaded = path.join(tempdir, 'site-com-blog-about.html');    
+  it('Main page', async () => {
+    const downloaded = path.join(tempdir, 'site-com-blog-about.html');
     await pageLoader('https://site.com/blog/about', tempdir);
     await expect(fs.promises.access(downloaded)).resolves.not.toThrow();
     expect(readFile(downloaded)).toEqual(readFile(getFixturePath('expected-site-com-blog-about.html')));
@@ -49,12 +49,11 @@ describe('pageLoader', () => {
   it.each(expected)(
     'Check %p asset',
     async (filename) => {
-      const expected = getExpectedPath(filename);
-      const downloaded = path.join(tempdir, 'site-com-blog-about_files', filename)
+      const expectedFile = getExpectedPath(filename);
+      const downloaded = path.join(tempdir, 'site-com-blog-about_files', filename);
       await pageLoader('https://site.com/blog/about', tempdir);
       await expect(fs.promises.access(downloaded)).resolves.not.toThrow();
-      await expect(readFile(downloaded)).toEqual(readFile(expected));
-    }
+      await expect(readFile(downloaded)).toEqual(readFile(expectedFile));
+    },
   );
 });
-
