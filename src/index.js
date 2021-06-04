@@ -2,12 +2,9 @@ import axios from 'axios';
 import * as fs from 'fs';
 import * as path from 'path';
 import validUrl from 'valid-url';
-import http from 'axios/lib/adapters/http.js';
 import {
   getFilename, getResources, replaceResources, slugify,
 } from './helpers.js';
-
-axios.defaults.adapter = http;
 
 const downloadFile = async (url, filepath) => {
   try {
@@ -42,5 +39,5 @@ export default async (url, output = process.cwd()) => {
   );
   const htmlReplaced = await replaceResources(html, rs, `${slugify(url)}_files`);
   await fs.promises.writeFile(filePath, htmlReplaced, 'utf-8');
-  return `Files downloaded into ${output}`;
+  return `${output}`;
 };
