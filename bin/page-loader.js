@@ -1,8 +1,10 @@
 #!/usr/bin/env node
 import commander from 'commander';
+import Debug from 'debug';
 import pageLoader from '../src/index.js';
-import Debug from "debug";
-const debug = Debug("page-loader");
+
+// eslint-disable-next-line no-unused-vars
+const debug = Debug('page-loader');
 
 const { program } = commander;
 
