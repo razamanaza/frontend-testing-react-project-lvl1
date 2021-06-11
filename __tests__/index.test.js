@@ -36,28 +36,31 @@ describe('pageLoader postive', () => {
   });
   beforeEach(() => {
     tempdir = fs.mkdtempSync(path.join(os.tmpdir(), 'page-loader-'));
-    const scope = nock('https://site.com');
+    const scope = nock('https://site.com').persist();
     resources.forEach(({ url, fixture }) => {
-      scope.get(url).times(2).reply(200, readFile(getFixturePath(fixture)));
+      scope.get(url).reply(200, readFile(getFixturePath(fixture)));
     });
   });
   afterEach(() => {
     nock.cleanAll();
   });
   it('Main page', async () => {
-    const downloaded = path.join(tempdir, 'site-com-blog-about.html');
     await pageLoader('https://site.com/blog/about', tempdir);
-    expect(fs.promises.access(downloaded)).resolves.not.toThrow();
-    expect(readFile(downloaded)).toEqual(readFile(getFixturePath('site-com-blog-about-replaced.html')));
+    const downloadedPath = path.join(tempdir, 'site-com-blog-about.html');
+    const downloaded = readFile(downloadedPath);
+    const expected = readFile(getFixturePath('site-com-blog-about-replaced.html'));
+    expect(fs.promises.access(downloadedPath)).resolves.not.toThrow();
+    expect(downloaded).toEqual(expected);
   });
   it.each(resources)(
-    'Check %p asset',
+    'Check $fixture file download',
     async (res) => {
-      const expectedFile = getFixturePath(res.fixture);
-      const downloaded = path.join(tempdir, 'site-com-blog-about_files', res.fixture);
       await pageLoader('https://site.com/blog/about', tempdir);
-      expect(fs.promises.access(downloaded)).resolves.not.toThrow();
-      expect(readFile(downloaded)).toEqual(readFile(expectedFile));
+      const expected = readFile(getFixturePath(res.fixture));
+      const downloadedPath = path.join(tempdir, 'site-com-blog-about_files', res.fixture);
+      const downloaded = readFile(downloadedPath);
+      expect(fs.promises.access(downloadedPath)).resolves.not.toThrow();
+      expect(downloaded).toEqual(expected);
     },
   );
 });
@@ -78,6 +81,13 @@ describe('pageLoader negative', () => {
   });
   it('Write to restricted dir', async () => {
     const output = ('/sys');
+    nock('https://site.com')
+      .get('/')
+      .reply(200);
+    await expect(pageLoader('https://site.com', output)).rejects.toThrow();
+  });
+  it('Write to not existent dir', async () => {
+    const output = ('/blahblah');
     nock('https://site.com')
       .get('/')
       .reply(200);

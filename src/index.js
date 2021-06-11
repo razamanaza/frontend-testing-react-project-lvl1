@@ -24,7 +24,7 @@ const downloadFile = async (url, filepath) => {
   }
 };
 
-export default async (url, output = process.cwd()) => {
+export default async (url, output) => {
   if (!validUrl.isWebUri(url)) {
     throw new Error('Invalid url format');
   }
