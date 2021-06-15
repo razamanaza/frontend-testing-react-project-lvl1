@@ -28,6 +28,7 @@ export default async (url, output = process.cwd()) => {
   if (!validUrl.isWebUri(url)) {
     throw new Error('Invalid url format');
   }
+  await fs.promises.access(output);
   const { origin } = new URL(url);
   const resp = await axios.get(url);
   const html = resp.data;
