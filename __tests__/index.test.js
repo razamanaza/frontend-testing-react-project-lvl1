@@ -87,11 +87,11 @@ describe('pageLoader negative', () => {
     await expect(pageLoader('https://site.com', output)).rejects.toThrow();
   });
   it('Write to not existent dir', async () => {
-    const output = ('/blahblah');
+    const output = ('/tmp/blahblah');
     nock('https://site.com')
       .get('/')
       .reply(200);
-    await expect(pageLoader('https://site.com', output)).rejects.toThrow();
+    await expect(pageLoader('https://site.com', output)).resolves.not.toThrow();
   });
   it('Network error', async () => {
     nock('https://site.com')
