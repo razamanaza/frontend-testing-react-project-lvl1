@@ -40,5 +40,5 @@ export default async (url, output) => {
   );
   const htmlReplaced = await replaceResources(html, rs, `${slugify(url)}_files`);
   await fs.promises.writeFile(filePath, htmlReplaced, 'utf-8');
-  return `${output}`;
+  return { filepath: filePath };
 };
